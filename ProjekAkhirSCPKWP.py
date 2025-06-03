@@ -21,17 +21,24 @@ a = df['Name'].tolist()
 support_map = {'Neutral': 1, 'Support': 2, 'Max Support': 3}
 df['SupportEncoded'] = df['Support'].map(support_map)
 
+df['GuideRailsEncoded'] = df['GuideRails'].notna().astype(int)
+df['GoreTexEncoded'] = df['Gore-Tex'].notna().astype(int)
+
 # 2. Matriks Keputusan
 # x = df.drop(columns=['Name']).to_numpy()
-x = df[['Price', 'SupportEncoded', 'Weight(g)']].to_numpy()
+
+x = df[['Price', 'SupportEncoded', 'Weight(g)', 'GuideRailsEncoded', 'GoreTexEncoded']].to_numpy()
+epsilon = 1e-6
+x = np.where(x == 0, epsilon, x)
+
 
 # 3. Membuat Cost / Benefit Per kriteria
 # k = [1, 1, 1, 1, 1, 1]
-k = [-1,1,-1]
+k = [-1, 1,-1, 1, 1]
 
 # 4. Membuat Bobot Per kriteria
 # w = [3, 4, 4, 5, 3, 4]
-w = [3, 5, 4]
+w = [3, 5, 4, 2, 2]
 
 # 5. Normalisasi Kriteria
 w_norm = [c / sum(w) for c in w]
@@ -40,6 +47,9 @@ w_norm = [c / sum(w) for c in w]
 # m = Jumlah Alternatif, n = jumlah kriteria
 m = len(a)
 n = len(w)
+
+st.write("Matrix x (used in WP):", x)
+
 
 s = [1]*m # [1, 1, 1]
 
@@ -56,7 +66,7 @@ df_hasil = pd.DataFrame({
 })
 
 df_hasil = df_hasil.sort_values(by='WP Score', ascending=False).reset_index(drop=True)
-
+ 
 st.subheader("Hasil ranking WP")
 st.dataframe(
     df_hasil.style.format({'WP Score': '{:.6f}'}),
