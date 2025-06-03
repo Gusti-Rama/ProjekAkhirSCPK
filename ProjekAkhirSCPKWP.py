@@ -18,14 +18,20 @@ st.dataframe(df, use_container_width=True)
 # 1. Menentukan Alternatif
 a = df['Name'].tolist()
 
+support_map = {'Neutral': 1, 'Support': 2, 'Max Support': 3}
+df['SupportEncoded'] = df['Support'].map(support_map)
+
 # 2. Matriks Keputusan
-x = df.drop(columns=['Name']).to_numpy()
+# x = df.drop(columns=['Name']).to_numpy()
+x = df[['Price', 'SupportEncoded', 'Weight(g)']].to_numpy()
 
 # 3. Membuat Cost / Benefit Per kriteria
-k = [1, 1, 1, 1, 1, 1]
+# k = [1, 1, 1, 1, 1, 1]
+k = [-1,1,-1]
 
 # 4. Membuat Bobot Per kriteria
-w = [3, 4, 4, 5, 3, 4]
+# w = [3, 4, 4, 5, 3, 4]
+w = [3, 5, 4]
 
 # 5. Normalisasi Kriteria
 w_norm = [c / sum(w) for c in w]
