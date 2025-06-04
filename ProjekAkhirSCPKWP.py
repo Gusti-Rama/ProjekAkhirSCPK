@@ -2,25 +2,48 @@ import pandas as pd
 import streamlit as st
 import numpy as np
 
-st.set_page_config(page_title="WP Pemilihan Sepatu Lari Brooks")
-st.title("WP Pemilihan Sepatu Lari Brooks")
-st.write("Gusti Rama / 123230040 / IF-F")
+st.set_page_config(page_title="WP Pemilihan Sepatu Lari Brooks", layout="wide")
+st.markdown("""
+    <style>
+    .blurred-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://img.redbull.com/images/c_crop,w_5488,h_2744,x_0,y_839/c_auto,w_1200,h_630/f_auto,q_auto/redbullcom/2018/05/13/3bb23c1d-f64d-40a2-a415-fc5451b7cbed/running-sand');
+        background-size: cover;
+        background-position: center;
+        filter: blur(8px);
+        z-index: -1;
+    }
+
+    /* Optional: reduce transparency of the main content for contrast */
+    .stApp {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    </style>
+    <div class="blurred-bg"></div>
+""", unsafe_allow_html=True)
+
+st.title("WP Pemilihan Sepatu Lari Brooks 👟")
 st.write("Mahmud Hidayatul Malik / 123220025 / IF-F")
+st.write("Gusti Rama / 123230040 / IF-F")
 
 st.subheader("Load data file CSV")
 df = pd.read_csv("BrooksShoes.csv", sep=',')
 st.dataframe(df, use_container_width=True)
 
 # Sidebar
-st.sidebar.header("Pengaturan WP")
-gender_filter = st.sidebar.selectbox("Pilih Gender", ["All", "Men's", "Women's", "Unisex"])
+st.sidebar.header("Pengaturan WP ⚙️")
+gender_filter = st.sidebar.selectbox("Pilih Gender ", ["All", "Men's", "Women's", "Unisex"])
 if gender_filter != "All":
     df = df[df['Type'] == gender_filter]
 
 # 1. Menentukan Alternatif
 a = df['Name'].tolist()
 
-st.subheader("Data yang Digunakan")
+st.subheader("Data yang Digunakan 📊")
 
 dipakai = ['Name', 'Price', 'Type', 'Support', 'Weight(g)', 'GuideRails', 'Gore-Tex', 'DNA LOFT', 'BioMoGo DNA']
 st.dataframe(df[dipakai].reset_index(drop=True), use_container_width=True)
@@ -92,17 +115,17 @@ def highlight_top(val):
 
 st.subheader("Hasil ranking WP")
 st.dataframe(
-    df_hasil.style.applymap(highlight_top, subset=['Sepatu']).format({'WP Score': '{:.6f}'}), use_container_width=True
+    df_hasil.style.map(highlight_top, subset=['Sepatu']).format({'WP Score': '{:.6f}'}), use_container_width=True
 )
 
-# terbaik = df_hasil['Sepatu'].iloc[0]
-terbaik = a[v.index(max(v))]
-st.success(f"Sepatu Lari Brooks terbaik adalah: {terbaik} ")
+terbaik = df_hasil['Sepatu'].iloc[0]
+# terbaik = a[v.index(max(v))]
+st.success(f"🏆 Sepatu Lari Brooks terbaik adalah: {terbaik} ")
 
 
 csv_download = df_hasil.to_csv(index=False).encode('utf-8')
 st.download_button(
-    label="Download Hasil Ranking sebagai CSV",
+    label="⬇️ Download Hasil Ranking sebagai CSV",
     data=csv_download,
     file_name='hasil_wp.csv',
     mime='text/csv'
