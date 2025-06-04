@@ -5,7 +5,7 @@ import numpy as np
 st.set_page_config(page_title="WP Pemilihan Sepatu Lari Brooks")
 st.title("WP Pemilihan Sepatu Lari Brooks")
 st.write("Gusti Rama / 123230040 / IF-F")
-st.write("Gusti Rama / 123230040 / IF-F")
+st.write("Mahmud Hidayatul Malik / 123220025 / IF-F")
 
 st.subheader("Load data file CSV")
 df = pd.read_csv("BrooksShoes.csv", sep=',')
